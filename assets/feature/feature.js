@@ -1,22 +1,22 @@
-/**
-* TITLE:
-* @component: Advisernet Side Nav ( Sticky nav)
-*
-* AUTHOR:
-* Citizens Advice: Front-end
-*
-* DESCRIPTION:
-* Advisernet Sidenav with all related page links and H2
-*
-* README:
-*
-*
-* API:
-*
-*
-*/
+// /**
+// * TITLE:
+// * @component: Advisernet Side Nav ( Sticky nav)
+// *
+// * AUTHOR:
+// * Citizens Advice: Front-end
+// *
+// * DESCRIPTION:
+// * Advisernet Sidenav with all related page links and H2
+// *
+// * README:
+// *
+// *
+// * API:
+// *
+// *
+// */
 
-'use strict';
+// 'use strict';
 
 var advisernetSidenav = (function () {
 
@@ -28,7 +28,6 @@ var advisernetSidenav = (function () {
     var $sideNavPageLinks = $('.sidebar__menu--sub-heading.expanded .sidebar__sub--menu li a');
     var $activeClass = 'active';
     var $pageLinkUrl = (window).location.href;
-    var $bottomOfContent = $(window).scrollTop() + $(window).height() > $(document).height() - $('#footer').height();
     var $viewportHeight = $(window).innerHeight();
 
     var stickyNav = {
@@ -63,7 +62,7 @@ var advisernetSidenav = (function () {
         }
     }
 
-    function stickySidebarTrigger() {
+    function getVisible() {    
         var $el = $('.main-content'),
             scrollTop = $(this).scrollTop(),
             scrollBot = scrollTop + $(this).height(),
@@ -71,20 +70,25 @@ var advisernetSidenav = (function () {
             elBottom = elTop + $el.outerHeight(),
             visibleTop = elTop < scrollTop ? scrollTop : elTop,
             visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
+    
             var containerHeightVisible = visibleBottom - visibleTop;
+            $($stickySideNav).css({maxHeight:containerHeightVisible}) 
+            console.log("Visible bottom : ", containerHeightVisible);  
+    }
 
+    function stickySidebarTrigger() {
 
         if( $(this).scrollTop() >= $('.main-content').offset().top ){
             stickyNav.stick($stickySideNav);
-            console.log('Sticky');
+            //console.log('Sticky');
         }else if( $(this).scrollTop() < $('.main-content').offset().top ){
-            console.log("back to top");
+            //console.log("back to top");
             stickyNav.detach($stickySideNav);
         } 
 
-        if($(window).scrollTop() + $(window).height() > $(document).height() - $('#footer').height()){
+        if($(window).scrollTop() + $(window).height() > $(document).height() - ($('#footer').height())){
             console.log("near bottom" );
-            $($stickySideNav).css({maxHeight:containerHeightVisible})
+            getVisible()
         }
        
 
