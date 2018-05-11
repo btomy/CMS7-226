@@ -98,7 +98,7 @@ var advisernetSidenav = (function () {
     function stickySidebarTrigger() {
 
         getVisible();
-        if ($(this).scrollTop() >= $('.main-content').offset().top - 20 && $(window).width() > 750 ) {
+        if ($(this).scrollTop() >= $('.main-content').offset().top - 20 && $(window).width() > 750 ) { //
             setElementOuterWidth($stickySideNav);
             stickyNav.stick($stickySideNav);
             //console.log('Sticky');
@@ -106,6 +106,14 @@ var advisernetSidenav = (function () {
             //console.log("back to top");
             stickyNav.detach($stickySideNav);
         }
+
+        var distance = $('#footer').offset().top;
+
+        $(window).scroll(function() {
+            if ( $(window).scrollTop() >= distance ) {
+                console.log("footer at top");
+            }
+        });
 
         if( $(window).width() < 1020 ) {
             document.getElementById("sidebar").style.width = null;
@@ -117,6 +125,25 @@ var advisernetSidenav = (function () {
             }
         } 
     }
+
+    function debounce(func, wait, immediate) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    };
+
+    var myEfficientFn = debounce(function() {
+        // All the taxing stuff you do
+    }, 250);
 
     function initialise() {
 
