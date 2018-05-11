@@ -31,29 +31,48 @@ var advisernetSidenav = (function () {
     var $viewportHeight = $(window).innerHeight();
 
     var stickyNav = {
-        detach(element) {
+        detach: function (element) {
             element.removeClass('sticky scroll');
         },
-        stick(element){
+        stick: function (element) {
             element.addClass('sticky scroll');
         }
     }
 
-    function setElementOuterWidth (elem) {
+    function highlightNavItem(hash, selectedElement) {
+        if ($pageLinkUrl.split('#')[1] === hash) {
+            $($sideNavPageLinks).each(function () {
+                $(this).parent().removeClass('active');
+                var anchorUrl = $(this).attr('href').split('#')[1];
+
+                if ($pageLinkUrl.indexOf(anchorUrl) > 1) {
+                    $(this).parent().addClass('active');
+                }
+            });
+        } else {
+            $($sideNavPageLinks).each(function () {
+                $(this).parent().removeClass('active');
+            });
+
+            $(selectedElement).parent().addClass('active');
+        }
+    }
+
+    function setElementOuterWidth(elem) {
         $(elem).width($($stickySideNav).width());
     }
 
     function accordionWithChild() {
-        $($stickySideNavList).has('ul').each(function() {
+        $($stickySideNavList).has('ul').each(function () {
             $(this).addClass('children');
         });
     }
 
-    function handleToggle (thisObj) {
+    function handleToggle(thisObj) {
         if (thisObj.parents($stickySideNavList).has('ul')) {
             thisObj.parents($stickySideNavList).toggleClass("expanded")
             thisObj.parents($stickySideNavList).children($accordionSubmenu).toggleClass("collapsed");
-            
+
             if (thisObj.parents($stickySideNavList).hasClass('expanded')) {
                 thisObj.parents().attr("aria-expanded", "true");
             } else {
@@ -62,7 +81,7 @@ var advisernetSidenav = (function () {
         }
     }
 
-    function getVisible() {    
+    function getVisible() {
         var $el = $('.main-content'),
             scrollTop = $(this).scrollTop(),
             scrollBot = scrollTop + $(this).height(),
@@ -70,61 +89,60 @@ var advisernetSidenav = (function () {
             elBottom = elTop + $el.outerHeight(),
             visibleTop = elTop < scrollTop ? scrollTop : elTop,
             visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
-    
-            var containerHeightVisible = visibleBottom - visibleTop;
-            $($stickySideNav).css({maxHeight:containerHeightVisible}) 
-            console.log("Visible bottom : ", containerHeightVisible);  
+
+        var containerHeightVisible = visibleBottom - visibleTop;
+        $($stickySideNav).css({ maxHeight: containerHeightVisible })
+        //console.log("Visible bottom : ", containerHeightVisible);
     }
 
     function stickySidebarTrigger() {
 
-        if( $(this).scrollTop() >= $('.main-content').offset().top ){
+        getVisible();
+        if ($(this).scrollTop() >= $('.main-content').offset().top - 20 && $(window).width() > 750 ) {
+            setElementOuterWidth($stickySideNav);
             stickyNav.stick($stickySideNav);
             //console.log('Sticky');
-        }else if( $(this).scrollTop() < $('.main-content').offset().top ){
+        } else if ($(this).scrollTop() < $('.main-content').offset().top) {
             //console.log("back to top");
             stickyNav.detach($stickySideNav);
-        } 
-
-        if($(window).scrollTop() + $(window).height() > $(document).height() - ($('#footer').height())){
-            console.log("near bottom" );
-            getVisible()
         }
-       
 
-        // if( $(window).width() < 750 ) {
-        //     stickyNav.detach($stickySideNav);
-        // }else{
-        //     stickyNav.stick($stickySideNav);
-        // }
+        if( $(window).width() < 1020 ) {
+            document.getElementById("sidebar").style.width = null;
+            console.log("reset style");
+            if($(window).width() < 750) {
+                console.log("reset style 750");                
+                stickyNav.detach($stickySideNav);
+                document.getElementById("sidebar").style.maxHeight = null;
+            }
+        } 
     }
 
     function initialise() {
 
-        setElementOuterWidth($stickySideNav);
         accordionWithChild();
         
-
-        $($toggleButtonWrapper).on('click', function(e){
+        $($toggleButtonWrapper).on('click', function (e) {
             handleToggle($(this));
         });
-
-        $($sideNavPageLinks).each(function(){
-            var ThisHref = ($(this).attr('href').split('#'))[1];
-    
-            if ($pageLinkUrl.indexOf(ThisHref) > -1) {
-                $(this).parent().addClass($activeClass);
-            }
+        
+        $(window).on('scroll resize', stickySidebarTrigger);
+        
+        $(window).on('load', function () {
+            setElementOuterWidth($stickySideNav);
+            highlightNavItem(window.location.href.split('#')[1])
         });
 
-        $(window).on('scroll resize' ,stickySidebarTrigger);
-        
+        $($sideNavPageLinks).on('click', function (event) {
+            highlightNavItem($(this).attr('href').split('#')[1], $(this));
+        });
+
     }
 
-    return{
+    return {
         render: initialise
     }
 
 })();
 
-advisernetSidenav.render(); 
+advisernetSidenav.render();
