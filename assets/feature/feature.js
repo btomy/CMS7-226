@@ -26,7 +26,6 @@ var advisernetSidenav = (function () {
     var $toggleButtonWrapper = $('.sidebar__menu-toggle-wrapper');
     var $accordionSubmenu = $('.sidebar__sub--menu');
     var $sideNavPageLinks = $('.sidebar__menu--sub-heading.expanded .sidebar__sub--menu li a');
-    var $activeClass = 'active';
     var $pageLinkUrl = (window).location.href;
     var $viewportHeight = $(window).innerHeight();
 
@@ -39,7 +38,7 @@ var advisernetSidenav = (function () {
         }
     }
 
-    function highlightNavItem(hash, selectedElement) {
+    function highlightNavItem(hash, selectedElement) { //hightliting h2 within a list in the nav
         if ($pageLinkUrl.split('#')[1] === hash) {
             $($sideNavPageLinks).each(function () {
                 $(this).parent().removeClass('active');
@@ -58,7 +57,7 @@ var advisernetSidenav = (function () {
         }
     }
 
-    function setElementOuterWidth(elem) {
+    function setElementOuterWidth(elem) { //setting element width, so this takes the css width, converts it to pixels and apply it to sidenav. As for position fixed you need pixel values
         $(elem).width($($stickySideNav).width());
     }
 
@@ -68,7 +67,7 @@ var advisernetSidenav = (function () {
         });
     }
 
-    function handleToggle(thisObj) {
+    function handleToggle(thisObj) { //opening and closing of the accordion
         if (thisObj.parents($stickySideNavList).has('ul')) {
             thisObj.parents($stickySideNavList).toggleClass("expanded")
             thisObj.parents($stickySideNavList).children($accordionSubmenu).toggleClass("collapsed");
@@ -81,7 +80,7 @@ var advisernetSidenav = (function () {
         }
     }
 
-    function getVisible() {
+    function getVisible() { //calculating how much is visible when scrolling and apply the value as a max height to the sidenav. 
         var $el = $('.main-content'),
             scrollTop = $(this).scrollTop(),
             scrollBot = scrollTop + $(this).height(),
@@ -95,67 +94,43 @@ var advisernetSidenav = (function () {
         //console.log("Visible bottom : ", containerHeightVisible);
     }
 
-    function stickySidebarTrigger() {
+    function stickySidebarTrigger() { // this is triggered all the time for scroll and resize. 
 
         getVisible();
-        if ($(this).scrollTop() >= $('.main-content').offset().top - 20 && $(window).width() > 750) { //
+        if ($(this).scrollTop() >= $('.main-content').offset().top - 20 && $(window).width() > 750 ) { // sticky nav gets applied if the .main-content is near the viewport
             setElementOuterWidth($stickySideNav);
             stickyNav.stick($stickySideNav);
             //console.log('Sticky');
-        } else if ($(this).scrollTop() < $('.main-content').offset().top) {
+        } else if ($(this).scrollTop() < $('.main-content').offset().top) { //detach the nav when its back to the top of page
             //console.log("back to top");
             stickyNav.detach($stickySideNav);
         }
 
-        var distance = $('#footer').offset().top;
+        var distance = $('#footer').offset().top - 40;
+        if ( $(window).scrollTop() >= distance ) {
+            //console.log("footer at top");
+            document.getElementById("sidebar").style.maxHeight = 0;
+        }
 
-        $(window).scroll(function () {
-            if ($(window).scrollTop() >= distance) {
-                console.log("footer at top");
-                document.getElementById("sidebar").style.maxHeight = 0;
-            }
-        });
-
-        if ($(window).width() < 1020) {
+        if( $(window).width() < 1020 ) {
             document.getElementById("sidebar").style.width = null;
-            console.log("reset style");
-            if ($(window).width() < 750) {
-                console.log("reset style 750");
+            if($(window).width() < 750) {             
                 stickyNav.detach($stickySideNav);
                 document.getElementById("sidebar").style.maxHeight = null;
             }
-        }
+        } 
     }
-
-    function debounce(func, wait, immediate) {
-        var timeout;
-        return function () {
-            var context = this, args = arguments;
-            var later = function () {
-                timeout = null;
-                if (!immediate) func.apply(context, args);
-            };
-            var callNow = immediate && !timeout;
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-            if (callNow) func.apply(context, args);
-        };
-    };
-
-    var myEfficientFn = debounce(function () {
-        // All the taxing stuff you do
-    }, 250);
 
     function initialise() {
 
         accordionWithChild();
-
+        
         $($toggleButtonWrapper).on('click', function (e) {
             handleToggle($(this));
         });
-
+        
         $(window).on('scroll resize', stickySidebarTrigger);
-
+        
         $(window).on('load', function () {
             setElementOuterWidth($stickySideNav);
             highlightNavItem(window.location.href.split('#')[1])
