@@ -131,7 +131,7 @@ var advisernetSidenav = (function () {
         });
 
         $($mobileNav).on('click', function(e) {
-            $('.sidebar__menu--list').toggleClass("d-block");
+            $('.sidebar__menu--list').toggle();
         });
 
         $(window).on('scroll resize', stickySidebarTrigger);
