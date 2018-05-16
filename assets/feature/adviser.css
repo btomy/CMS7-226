@@ -1,6 +1,7 @@
 body{
   font-family: 'Open Sans', sans-serif;
 }
+
 .advisernet .right h1 {
   color: #2A8CA2;
   font-size: 36px;
@@ -34,14 +35,25 @@ body{
   display:inline-block;
   display: inline-flex;
   flex-direction: column;
+  outline: 2px solid;
+  padding: 10px;
+  margin-bottom: 20px;
 }
 
 .sidebar__menu h2 {
   clear: left;
   font-size: 1.8rem;
   color: #2A8CA2;
-  margin: 0 0 1rem;
   font-weight: bold;
+  margin: 0;
+}
+
+.sidebar__menu h2:last-child{
+  display: none;
+}
+
+.sidebar__menu--heading_mobile{
+  margin: 0;
 }
 
 .sidebar__menu h4 {
@@ -53,6 +65,7 @@ body{
   list-style: none;
   list-style-type: none;
   padding-left: 0;
+  display: none;
 }
 
 .sidebar__menu .sidebar__menu--sub-heading {
@@ -63,7 +76,7 @@ body{
   padding: 0;
 }
 
-.sidebar__menu .sidebar__menu-toggle-wrapper:hover{
+.sidebar__menu .sidebar__menu-toggle-wrapper:hover {
   background-color: #e3f4ff;
 }
 
@@ -100,6 +113,8 @@ body{
   list-style-type: none;
   margin: 0 0 10px 15px;
   padding: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .sidebar__sub--menu li {
@@ -115,9 +130,11 @@ body{
   display: inline-block;
   border: none;
   text-decoration: none;
-  color: #000;  
+  color: #000;
+  font-size:14px;
 }
 
+.sidebar__sub--menu li a:focus,
 .sidebar__sub--menu li a:hover {
   background: none;
 }
@@ -186,22 +203,23 @@ body{
   box-shadow: none;
 }
 
-/* .sidebar__menu .sidebar__menu-toggle-wrapper:focus{
-  outline: 2px solid #FCBB69;
-} */
-.sidebar__menu-link:focus{
-  outline:0;
+.sidebar__menu-toggle:focus{
+  background: none;
+  outline: none;
+  border: 2px solid #FCBB69;
+  width: 32px;
 }
-/* .sidebar__menu-toggle:focus{
-  outline: 2px solid #FCBB69;
-} */
+
+.sidebar__menu-link:focus{
+  outline: none;
+  border: 2px solid #FCBB69;
+  padding: 8px;
+}
 
 .sidebar__menu--sub-heading.children.expanded.active .sidebar__menu-toggle-wrapper{
-  outline: 2px solid #FCBB69;  
+  background-color: #e3f4ff;
 }
-.sidebar__menu--sub-heading.children.expanded .sidebar__menu-toggle{
-  outline: none;
-}
+
 .sidebar__menu--sub-heading.children.expanded .sidebar__menu-toggle::after {
   content: "\f068";
   font-family: cab-icons;
@@ -222,7 +240,7 @@ body{
   display: block;
   font-size: 12px;
   text-align: center;
-  color: #000;  
+  color: #000;
 }
 
 .scroll{
@@ -235,7 +253,7 @@ body{
 
 .sidebar__menu.sticky{
   position: fixed;
-  top: 0;
+  top: 20px;
 }
 
 @media (min-width: 750px) {
@@ -244,8 +262,16 @@ body{
     }
   .sidebar__menu{
     width: 30%;
+    outline: none;
+    padding: 0;
+  }
+  .sidebar__menu h2{
+    margin: 0 0 1rem;
   }
   .right {
     width: 67%;
+  }
+  .sidebar__menu--list , .sidebar__menu h2:last-child{
+    display: block;
   }
 }
