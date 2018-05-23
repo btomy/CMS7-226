@@ -130,7 +130,9 @@ var advisernetSidenav = (function () {
             handleToggle($(this));
         });
 
-        $($mobileNav).on('click', function(e) {
+        $($mobileNav).on('click', function (e) {
+            $('.sidebar__menu h2:nth-child(2)').toggle();
+            $('.sidebar__menu--heading_mobile').toggleClass("expanded");
             $('.sidebar__menu--list').toggle();
         });
 

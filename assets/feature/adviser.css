@@ -35,7 +35,7 @@ body{
   display:inline-block;
   display: inline-flex;
   flex-direction: column;
-  outline: 2px solid;
+  outline: 1px solid #fcbb69;
   padding: 10px;
   margin-bottom: 20px;
 }
@@ -47,13 +47,14 @@ body{
   font-weight: bold;
   margin: 0;
 }
-
-.sidebar__menu h2:last-child{
-  display: none;
+.sidebar__menu h2:nth-child(2){
+    display:none;
+        margin-top: 1em;
 }
 
 .sidebar__menu--heading_mobile{
   margin: 0;
+  position: relative;
 }
 
 .sidebar__menu h4 {
@@ -220,6 +221,34 @@ body{
   background-color: #e3f4ff;
 }
 
+.sidebar__menu--heading_mobile.expanded:after{
+  content: "\f068";
+  font-family: cab-icons;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  color: #000;
+  position: absolute;
+  right: 10px;
+  top: 14px;
+}
+
+.sidebar__menu--heading_mobile:after{
+  content: "\f067";
+  font-family: cab-icons;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  color: #000;
+  position: absolute;
+  right: 10px;
+  top: 14px;
+}
+
 .sidebar__menu--sub-heading.children.expanded .sidebar__menu-toggle::after {
   content: "\f068";
   font-family: cab-icons;
@@ -231,6 +260,7 @@ body{
   text-align: center;
   color: #000;
 }
+
 .sidebar__menu--sub-heading.children .sidebar__menu-toggle::after {
   content: "\f067";
   font-family: cab-icons;
@@ -268,10 +298,14 @@ body{
   .sidebar__menu h2{
     margin: 0 0 1rem;
   }
+  .sidebar__menu h2:nth-child(2){
+      display:block;
+      margin-top:0;
+  }
   .right {
     width: 67%;
   }
-  .sidebar__menu--list , .sidebar__menu h2:last-child{
+  .sidebar__menu--list{
     display: block;
   }
 }
