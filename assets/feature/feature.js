@@ -29,6 +29,7 @@ var advisernetSidenav = (function () {
     var $pageLinkUrl = (window).location.href;
     var $mobileNav = $('.sidebar__menu--heading_mobile');
     var $viewportHeight = $(window).innerHeight();
+    var $sidebarToggleButton = $('.sidebar__menu-toggle');
 
     var stickyNav = {
         detach: function (element) {
@@ -69,6 +70,7 @@ var advisernetSidenav = (function () {
     }
 
     function handleToggle(thisObj) { //opening and closing of the accordion
+        // thisObj = .sidebar__menu-toggle-wrapper
         if (thisObj.parents($stickySideNavList).has('ul')) {
             thisObj.parents($stickySideNavList).toggleClass("expanded")
             thisObj.parents($stickySideNavList).children($accordionSubmenu).toggleClass("collapsed");
@@ -81,7 +83,7 @@ var advisernetSidenav = (function () {
         }
     }
 
-    function getVisible() { //calculating how much is visible when scrolling and apply the value as a max height to the sidenav. 
+    function getVisible() { //calculating how much is visible when scrolling and apply the value as a max height to the sidenav.
         var $el = $('.main-content'),
             scrollTop = $(this).scrollTop(),
             scrollBot = scrollTop + $(this).height(),
@@ -95,10 +97,10 @@ var advisernetSidenav = (function () {
         //console.log("Visible bottom : ", containerHeightVisible);
     }
 
-    function stickySidebarTrigger() { // this is triggered all the time for scroll and resize. 
+    function stickySidebarTrigger() { // this is triggered all the time for scroll and resize.
 
         getVisible();
-        if ($(this).scrollTop() >= $('.main-content').offset().top - 20 && $(window).width() > 750) { // sticky nav gets applied if the .main-content is near the viewport
+        if ($(this).scrollTop() >= $('.main-content').offset().top && $(window).width() > 750) { // sticky nav gets applied if the .main-content is near the viewport
             setElementOuterWidth($stickySideNav);
             stickyNav.stick($stickySideNav);
             //console.log('Sticky');
@@ -122,13 +124,34 @@ var advisernetSidenav = (function () {
         }
     }
 
+    function centerElement (container, target, testing) {
+        var $container = $(container);
+        var $target    = $(target);
+
+        var containerHeight   = $container.height();
+        var targetOuterHeight = $target.outerHeight(true);
+        var targetIndex       = $target.index();
+        var items             = $('.sidebar__menu--list').find('> li');
+        var headingHeight     = $('.sidebar__menu h2:nth-child(2)').outerHeight(true);
+        var scrollValue       = 0;
+
+        for (var i = 0; i < targetIndex; i++) {
+          scrollValue += $(items[i]).outerHeight(true);
+        }
+
+        $container.scrollTop(
+          Math.max(0, scrollValue - ((containerHeight - targetOuterHeight) - (headingHeight * 2)) / 2)
+        );
+    }
+
     function initialise() {
 
         accordionWithChild();
 
-        $($toggleButtonWrapper).on('click', function (e) {
-            handleToggle($(this));
-        });
+        // event handler
+        $($sidebarToggleButton).on('click', function () {
+            handleToggle($(this).parent());
+        })
 
         $($mobileNav).on('click', function (e) {
             $('.sidebar__menu h2:nth-child(2)').toggle();
@@ -140,7 +163,11 @@ var advisernetSidenav = (function () {
 
         $(window).on('load', function () {
             setElementOuterWidth($stickySideNav);
-            highlightNavItem(window.location.href.split('#')[1])
+            highlightNavItem(window.location.href.split('#')[1]);
+
+            if ($(window).width() > 750) {
+              centerElement('.sidebar__menu', '.active');
+            }
         });
 
         $($sideNavPageLinks).on('click', function (event) {
@@ -155,4 +182,6 @@ var advisernetSidenav = (function () {
 
 })();
 
-advisernetSidenav.render();
+if ($('#sidebar.sidebar__menu').length > 0) {
+    advisernetSidenav.render();
+}
