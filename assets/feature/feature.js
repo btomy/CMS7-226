@@ -103,20 +103,24 @@ var advisernetSidenav = (function () {
         if ($(this).scrollTop() >= $('.main-content').offset().top && $(window).width() > 750) { // sticky nav gets applied if the .main-content is near the viewport
             setElementOuterWidth($stickySideNav);
             stickyNav.stick($stickySideNav);
-            //console.log('Sticky');
         } else if ($(this).scrollTop() < $('.main-content').offset().top) { //detach the nav when its back to the top of page
-            //console.log("back to top");
             stickyNav.detach($stickySideNav);
         }
 
         var distance = $('#footer').offset().top - 40;
         if ($(window).scrollTop() >= distance) {
-            //console.log("footer at top");
             document.getElementById("sidebar").style.maxHeight = 0;
         }
 
         if ($(window).width() < 1020) {
             document.getElementById("sidebar").style.width = null;
+            var sideBarwidth = document.getElementById('sidebar').offsetWidth;
+
+            if($($stickySideNav).has('sticky')){
+                console.log("hello worls");
+            }
+
+            console.log(sideBarwidth);
             if ($(window).width() < 750) {
                 stickyNav.detach($stickySideNav);
                 document.getElementById("sidebar").style.maxHeight = null;
